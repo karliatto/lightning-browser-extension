@@ -25,7 +25,7 @@ class Welcome extends React.Component {
     this.allowances.reset();
     this.settings.reset();
     alert("Done, you can start over");
-    utils.openPage("Options.html");
+    utils.openPage("options.html");
   }
 
   render() {

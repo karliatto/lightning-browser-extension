@@ -1,4 +1,3 @@
-import browser from "webextension-polyfill";
 import { Typography, Layout, Tabs } from "antd";
 import React, { useState, useEffect } from "react";
 
@@ -13,6 +12,7 @@ import LndForm from "../forms/lnd";
 import LndHubForm from "../forms/lndhub";
 import LnBitsForm from "../forms/lnbits";
 import NativeConnectionForm from "../forms/nativeConnection";
+import OpennodeForm from "../forms/opennode";
 
 import ListData from "../components/listData";
 import SetPassword from "../components/setPassword";
@@ -120,9 +120,30 @@ const Options = () => {
   const saveNativeAccount = (values, formRef) => {
     const account = {
       name: values.name,
-      config: {},
+      config: {
+        apiKey: "",
+        url: values.url || "https://api.opennode.co",
+      },
       connector: "native",
     };
+    return saveAccount(account).then(() => {
+      load();
+      if (formRef) {
+        formRef.resetFields();
+      }
+    });
+  };
+
+  const saveOpennodeAccount = (values, formRef) => {
+    const account = {
+      name: values.name,
+      config: {
+        url: values.url,
+        apiKey: values.apiKey,
+      },
+      connector: "opennode",
+    };
+
     return saveAccount(account).then(() => {
       load();
       if (formRef) {
@@ -223,6 +244,13 @@ const Options = () => {
                   onFinish={saveLnBitsAccount}
                   onFinishFailed={formSubmitFailure}
                 ></LnBitsForm>
+              </TabPane>
+
+              <TabPane tab="Opennode" key="5">
+                <OpennodeForm
+                  onFinish={saveOpennodeAccount}
+                  onFinishFailed={formSubmitFailure}
+                ></OpennodeForm>
               </TabPane>
             </Tabs>
           </TabPane>
